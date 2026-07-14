@@ -31,6 +31,26 @@ export class MinioService implements OnModuleInit {
       await this.client.makeBucket(this.bucketName);
       console.log(` Bucket "${this.bucketName}" created`);
     }
+    
+    // Set bucket policy to public read (both for new and existing buckets)
+    const policy = {
+      Version: '2012-10-17',
+      Statement: [
+        {
+          Effect: 'Allow',
+          Principal: { AWS: ['*'] },
+          Action: ['s3:GetObject'],
+          Resource: [`arn:aws:s3:::${this.bucketName}/*`],
+        },
+      ],
+    };
+    
+    try {
+      await this.client.setBucketPolicy(this.bucketName, JSON.stringify(policy));
+      console.log(` Bucket "${this.bucketName}" policy set to public read`);
+    } catch (error) {
+      console.error(` Error setting bucket policy:`, error);
+    }
   }
 
 async uploadFile(

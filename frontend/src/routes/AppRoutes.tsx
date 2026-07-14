@@ -15,17 +15,25 @@ import Reports from "../pages/admin/Reports";
 import Categories from "../pages/admin/Categories";
 import { Settings } from "lucide-react";
 import Customers from "../pages/admin/Customers";
+import CategoryProducts from "../pages/CategoryProducts";
+
+
 const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <MainLayout />,
-    children: [
-      {
-        index: true,
-        element: <Home />,
-      },
-    ],
-  },
+{
+  path: "/",
+  element: <MainLayout />,
+  children: [
+    {
+      index: true,
+      element: <Home />,
+    },
+
+    {
+      path: "category/:slug",
+      element: <CategoryProducts />,
+    },
+  ],
+},
 
   {
     path: "/login",
