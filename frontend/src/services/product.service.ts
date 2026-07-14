@@ -56,3 +56,7 @@ export const getProductsByCategory = async (slug: string) => {
   const response = await axios.get(`/products/category/${slug}`);
   return response.data;
 };
+export const getProductBySlug = async (slug: string) => {
+  const response = await axios.get(`/products/slug/${slug}`);
+  return response.data;
+};

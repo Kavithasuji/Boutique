@@ -692,4 +692,30 @@ async findByCategory(slug: string) {
     products,
   };
 }
+
+async findBySlug(slug: string) {
+  const product = await this.prisma.product.findUnique({
+    where: {
+      slug,
+    },
+    include: {
+      category: true,
+      colors: true,
+      variants: {
+        include: {
+          color: true,
+          inventory: true,
+        },
+      },
+    },
+  });
+
+  if (!product) {
+    throw new NotFoundException("Product not found");
+  }
+
+  return product;
+}
+
+
 }

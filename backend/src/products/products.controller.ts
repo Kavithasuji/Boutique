@@ -104,4 +104,9 @@ update(
 findByCategory(@Param('slug') slug: string) {
   return this.productsService.findByCategory(slug);
 }
+
+@Get("slug/:slug")
+findBySlug(@Param("slug") slug: string) {
+  return this.productsService.findBySlug(slug);
+}
 }
