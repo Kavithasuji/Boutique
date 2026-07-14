@@ -107,7 +107,6 @@ export class CategoriesService {
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)/g, '');
 
-      // Check if another category with same slug exists
       const existingCategory = await this.prisma.category.findFirst({
         where: {
           slug,
@@ -131,9 +130,7 @@ export class CategoriesService {
       updateData.isActive = isActive;
     }
 
-    // Handle image upload
     if (file) {
-      // Delete old image if exists
       if (category.image) {
         try {
           const objectName = category.image.split('/').pop();
@@ -145,7 +142,6 @@ export class CategoriesService {
         }
       }
 
-      // Upload new image
       const uploadedFile = {
         originalname: file.originalname,
         buffer: file.buffer,
@@ -180,14 +176,12 @@ export class CategoriesService {
       throw new NotFoundException('Category not found');
     }
 
-    // Check if category has products
     if (category.products.length > 0) {
       throw new BadRequestException(
         'Cannot delete category with associated products',
       );
     }
 
-    // Delete image from MinIO if exists
     if (category.image) {
       try {
         const objectName = category.image.split('/').pop();

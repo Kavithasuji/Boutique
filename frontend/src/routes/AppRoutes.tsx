@@ -16,6 +16,8 @@ import Categories from "../pages/admin/Categories";
 import { Settings } from "lucide-react";
 import Customers from "../pages/admin/Customers";
 import CategoryProducts from "../pages/CategoryProducts";
+import ProductDetails from "../pages/ProductDetails";
+
 
 
 const router = createBrowserRouter([
@@ -27,10 +29,13 @@ const router = createBrowserRouter([
       index: true,
       element: <Home />,
     },
-
     {
       path: "category/:slug",
       element: <CategoryProducts />,
+    },
+    {
+      path: "product/:slug",
+      element: <ProductDetails />,
     },
   ],
 },
