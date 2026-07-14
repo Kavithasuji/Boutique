@@ -28,7 +28,7 @@ async function main() {
     },
   });
 
-  console.log("✅ Admin account created successfully.");
+  console.log("Admin account created successfully.");
 }
 
 main()
