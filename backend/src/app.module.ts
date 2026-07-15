@@ -6,6 +6,7 @@ import { AppService } from './app.service';
 
 import { PrismaModule } from './prisma/prisma.module';
 import { AdminAuthModule } from './admin-auth/admin-auth.module';
+import { CustomerAuthModule } from './customer-auth/customer-auth.module';
 import { CategoriesModule } from './categories/categories.module';
 import { ProductsModule } from './products/products.module';
 
@@ -19,6 +20,7 @@ import { ProductsModule } from './products/products.module';
     PrismaModule,
 
     AdminAuthModule,
+    CustomerAuthModule,
     CategoriesModule,
     ProductsModule,
   ],

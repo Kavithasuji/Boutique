@@ -14,11 +14,8 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
-import { JwtAdminGuard } from '../admin-auth/guards/jwt-admin.guard';
-
 
 @Controller('categories')
-@UseGuards(JwtAdminGuard)
 export class CategoriesController {
   constructor(private readonly categoriesService: CategoriesService) {}
 

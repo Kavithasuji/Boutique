@@ -12,6 +12,13 @@ enum Role {
   CUSTOMER
 }
 
+enum AccountStatus {
+  PENDING_VERIFICATION
+  ACTIVE
+  SUSPENDED
+  DELETED
+}
+
 enum OrderStatus {
   PENDING
   PROCESSING
@@ -28,17 +35,22 @@ enum PaymentStatus {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  role      Role     @default(CUSTOMER)
+  id              String        @id @default(uuid())
+  name            String
+  email           String        @unique
+  password        String?
+  role            Role          @default(CUSTOMER)
+  accountStatus   AccountStatus @default(PENDING_VERIFICATION)
+  isEmailVerified Boolean       @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  orders     Order[]
-  cartItems  Cart[]
+  orders           Order[]
+  cartItems        Cart[]
+  otpTokens        OtpToken[]
+  refreshTokens    RefreshToken[]
+  passwordResetTokens PasswordResetToken[]
 }
 
 model Category {
@@ -213,4 +225,48 @@ model Payment {
   paymentStatus         PaymentStatus   @default(PENDING)
 
   createdAt             DateTime        @default(now())
+}
+
+model OtpToken {
+  id          String   @id @default(uuid())
+  userId      String
+  email       String
+  otp         String
+  expiresAt   DateTime
+  isUsed      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([email])
+  @@index([otp])
+}
+
+model RefreshToken {
+  id          String   @id @default(uuid())
+  userId      String
+  token       String   @unique
+  expiresAt   DateTime
+  isRevoked   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
+}
+
+model PasswordResetToken {
+  id          String   @id @default(uuid())
+  userId      String
+  token       String   @unique
+  expiresAt   DateTime
+  isUsed      Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([token])
 }
