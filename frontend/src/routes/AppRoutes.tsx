@@ -6,6 +6,7 @@ import AdminLayout from "../layouts/AdminLayout";
 import Home from "../pages/Home";
 import CustomerLogin from "../pages/CustomerLogin";
 import AdminLogin from "../pages/AdminLogin";
+import Profile from "../pages/Profile";
 
 import Dashboard from "../pages/admin/Dashboard";
 import Inventory from "../pages/admin/Inventory";
@@ -17,6 +18,14 @@ import { Settings } from "lucide-react";
 import Customers from "../pages/admin/Customers";
 import CategoryProducts from "../pages/CategoryProducts";
 import ProductDetails from "../pages/ProductDetails";
+import ProtectedRoute from "../components/common/ProtectedRoute";
+import Register from "../pages/Register";
+// import VerifyEmail from "../pages/VerifyEmail";
+import VerifyOtp from "../pages/VerifyOtp";
+import SetPassword from "../pages/SetPassword";
+import ForgotPassword from "../pages/ForgotPassword";
+import ResetPassword from "../pages/ResetPassword";
+// import MyOrders from "../pages/MyOrders";
 
 
 
@@ -37,6 +46,14 @@ const router = createBrowserRouter([
       path: "product/:slug",
       element: <ProductDetails />,
     },
+    {
+      path: "profile",
+      element: (
+        <ProtectedRoute>
+          <Profile />
+        </ProtectedRoute>
+      ),
+    },
   ],
 },
 
@@ -44,7 +61,26 @@ const router = createBrowserRouter([
     path: "/login",
     element: <CustomerLogin />,
   },
-
+{
+  path: "/register",
+  element: <Register />,
+},
+{
+  path: "/verify-otp",
+  element: <VerifyOtp />,
+},
+{
+  path: "/set-password",
+  element: <SetPassword />,
+},
+{
+  path: "/forgot-password",
+  element: <ForgotPassword />,
+},
+{
+  path: "/reset-password",
+  element: <ResetPassword />,
+},
   {
     path: "/admin/login",
     element: <AdminLogin />,

@@ -1,6 +1,6 @@
 
 import { useEffect, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 import logo from "../../assets/logo/cupi.webp";
 
 import {
@@ -11,11 +11,17 @@ import {
 } from "lucide-react";
 import { getCategories } from "../../services/category.service";
 import { getProducts } from "../../services/product.service";
+import { useAuth } from "../../contexts/AuthContext";
 
 
 
 
 const Header = () => {
+  const { isAuthenticated, user, logout } = useAuth();
+  const [categories, setCategories] = useState<any[]>([]);
+  const [products, setProducts] = useState<any[]>([]);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
   const loadNavigation = async () => {
@@ -34,12 +40,6 @@ const Header = () => {
 
   loadNavigation();
 }, []);
-const [categories, setCategories] = useState<any[]>([]);
-const [products, setProducts] = useState<any[]>([]);
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-
-  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -248,14 +248,45 @@ const [products, setProducts] = useState<any[]>([]);
 
           </div>
 
-          {/* Account */}
-
-          <Link
-            to="/profile"
-            className="transition hover:text-red-600 hover:scale-110"
-          >
-            <User size={21} />
-          </Link>
+          {/* Account - Changes based on auth state */}
+          {isAuthenticated ? (
+            <div className="relative group">
+              <button className="transition hover:text-red-600 hover:scale-110">
+                <User size={21} />
+              </button>
+              <div className="invisible opacity-0 absolute right-0 top-full mt-2 w-48 rounded-xl bg-white shadow-xl transition-all duration-300 group-hover:visible group-hover:opacity-100 z-50">
+                <div className="px-4 py-3 border-b border-gray-100">
+                  <p className="text-sm font-medium text-gray-900">{user?.name}</p>
+                  <p className="text-xs text-gray-500">{user?.email}</p>
+                </div>
+                <Link
+                  to="/profile"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  My Profile
+                </Link>
+                <Link
+                  to="/orders"
+                  className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                >
+                  My Orders
+                </Link>
+                <button
+                  onClick={logout}
+                  className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                >
+                  Logout
+                </button>
+              </div>
+            </div>
+          ) : (
+            <Link
+              to="/login"
+              className="transition hover:text-red-600 hover:scale-110"
+            >
+              <User size={21} />
+            </Link>
+          )}
 
           {/* Wishlist */}
 
@@ -280,36 +311,94 @@ const [products, setProducts] = useState<any[]>([]);
 
           </Link>
 
+          {/* Auth Buttons */}
+          {isAuthenticated ? (
+            <Link
+              to="/profile"
+              className="
+              rounded-full
+              bg-red-600
+              px-6
+              py-3
+              font-medium
+              text-white
+              shadow-lg
+              transition
+              hover:-translate-y-1
+              hover:bg-red-700
+              "
+            >
+              My Profile
+            </Link>
+          ) : (
+            <>
+              <Link
+                to="/login"
+                className="
+                rounded-full
+                border-2
+                border-red-600
+                px-6
+                py-3
+                font-medium
+                text-red-600
+                transition
+                hover:bg-red-50
+                "
+              >
+                Login
+              </Link>
+              <Link
+                to="/register"
+                className="
+                rounded-full
+                bg-red-600
+                px-6
+                py-3
+                font-medium
+                text-white
+                shadow-lg
+                transition
+                hover:-translate-y-1
+                hover:bg-red-700
+                "
+              >
+                Register
+              </Link>
+            </>
+          )}
+
           {/* Admin */}
 
           <Link
             to="/admin/login"
             className="
             rounded-full
-            bg-red-600
-            px-6
+            bg-gray-800
+            px-4
             py-3
             font-medium
             text-white
             shadow-lg
             transition
             hover:-translate-y-1
-            hover:bg-red-700
+            hover:bg-gray-900
+            text-sm
             "
           >
-            Admin Login
+            Admin
           </Link>
 
         </div>
 
         {/* Mobile */}
-
+{/* 
         <button
           onClick={() => setMenuOpen(!menuOpen)}
           className="lg:hidden text-3xl"
         >
           ☰
-        </button>
+        </button> */}
 
       </div>
 
@@ -332,11 +421,57 @@ const [products, setProducts] = useState<any[]>([]);
 
             ))}
 
+            {isAuthenticated ? (
+              <>
+                <Link
+                  to="/profile"
+                  onClick={() => setMenuOpen(false)}
+                  className="text-gray-700 hover:text-red-600"
+                >
+                  My Profile
+                </Link>
+                <Link
+                  to="/orders"
+                  onClick={() => setMenuOpen(false)}
+                  className="text-gray-700 hover:text-red-600"
+                >
+                  My Orders
+                </Link>
+                <button
+                  onClick={() => {
+                    logout();
+                    setMenuOpen(false);
+                  }}
+                  className="text-left text-red-600 hover:text-red-700"
+                >
+                  Logout
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  to="/login"
+                  onClick={() => setMenuOpen(false)}
+                  className="rounded-full border-2 border-red-600 py-3 text-center text-red-600"
+                >
+                  Login
+                </Link>
+                <Link
+                  to="/register"
+                  onClick={() => setMenuOpen(false)}
+                  className="rounded-full bg-red-600 py-3 text-center text-white"
+                >
+                  Register
+                </Link>
+              </>
+            )}
+
             <Link
               to="/admin/login"
-              className="rounded-full bg-red-600 py-3 text-center text-white"
+              onClick={() => setMenuOpen(false)}
+              className="rounded-full bg-gray-800 py-3 text-center text-white"
             >
-              Admin Login
+              Admin
             </Link>
 
           </div>

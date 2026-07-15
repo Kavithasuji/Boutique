@@ -3,7 +3,6 @@ import { Link, useParams } from "react-router-dom";
 import { SlidersHorizontal } from "lucide-react";
 
 import { getProductsByCategory } from "../services/product.service";
-import { useNavigate } from "react-router-dom";
 
 interface ProductColor {
   id: string;
@@ -65,8 +64,6 @@ interface ProductCard {
 }
 
 const CategoryProducts = () => {
-  const navigate = useNavigate();
-
   const { slug } = useParams();
 
   const [loading, setLoading] = useState(true);
@@ -236,7 +233,6 @@ const CategoryProducts = () => {
             Filters
           </button>
         </div>
-
         {/* Layout */}
 
         <div className="grid grid-cols-[300px_1fr] gap-10">

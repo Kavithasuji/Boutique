@@ -15,11 +15,9 @@ import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { JwtAdminGuard } from '../admin-auth/guards/jwt-admin.guard';
+// import { JwtAdminGuard } from '../admin-auth/guards/jwt-admin.guard';
 import { normalizeProductBody } from './utils/parse-product-form-data';
-
 @Controller('products')
-@UseGuards(JwtAdminGuard)
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 

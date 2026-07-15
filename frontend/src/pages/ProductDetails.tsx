@@ -220,77 +220,76 @@ items-start
           <div className="sticky top-28">
             {/* Main Image */}
 
-            <div
-              className="
-relative
-overflow-hidden
-rounded-2xl
-bg-white
-shadow-lg
-border
-border-gray-200
-"
-            >
-              <img
-                src={selectedImage}
-                alt={product.name}
-                className="
-h-[420px]
-sm:h-[520px]
-lg:h-[620px]
-w-full
-object-cover
-transition
-duration-300
-"
-              />
-            </div>
+         {/* Main Image */}
+
+<div
+  className="
+    relative
+    overflow-hidden
+    rounded-2xl
+    border
+    border-gray-200
+    bg-white
+    shadow-lg
+  "
+>
+  <img
+    src={selectedImage}
+    alt={product.name}
+    className="
+      w-full
+      aspect-[3/4]
+      object-contain
+      bg-white
+      p-5
+      transition-all
+      duration-300
+    "
+  />
+</div>
 
             {/* Gallery */}
 
-            <div className="mt-5 flex gap-3 overflow-x-auto pb-2">
-              {product.colors.map((color) => (
-                <button
-                  key={color.id}
-                  onClick={() => {
-                    setSelectedImage(color.imageUrl);
-
-                    setSelectedColor(color.color);
-                  }}
-                  className={`
-                    overflow-hidden
-rounded-xl
-           border-2
-                    bg-white
-                    shadow-md
-                    transition-all
-                    duration-300
-
-                   h-20
-w-20
-lg:h-24
-lg:w-24
-                    shrink-0
-
-                    ${
-                      selectedColor === color.color
-                        ? "border-red-600 scale-105"
-                        : "border-transparent hover:border-red-300"
-                    }
-                  `}
-                >
-                  <img
-                    src={color.imageUrl}
-                    alt={color.color}
-                    className="
-                      h-full
-                      w-full
-                      object-cover
-                    "
-                  />
-                </button>
-              ))}
-            </div>
+ <div className="mt-5 flex gap-3 overflow-x-auto pb-2">
+  {product.colors.map((color) => (
+    <button
+      key={color.id}
+      onClick={() => {
+        setSelectedImage(color.imageUrl);
+        setSelectedColor(color.color);
+      }}
+      className={`
+        flex
+        h-24
+        w-16
+        lg:h-28
+        lg:w-20
+        shrink-0
+        items-center
+        justify-center
+        overflow-hidden
+        rounded-xl
+        border-2
+        bg-white
+        p-1
+        shadow-sm
+        transition-all
+        duration-300
+        ${
+          selectedColor === color.color
+            ? "border-red-600 ring-2 ring-red-200"
+            : "border-gray-200 hover:border-red-300"
+        }
+      `}
+    >
+      <img
+        src={color.imageUrl}
+        alt={color.color}
+        className="h-full w-full rounded-lg object-contain"
+      />
+    </button>
+  ))}
+</div>
           </div>
 
           {/* RIGHT */}
@@ -315,9 +314,9 @@ lg:w-24
             <h1
               className="
 mt-3
-text-3xl
-sm:text-4xl
-lg:text-5xl
+text-2xl
+sm:text-3xl
+lg:text-lg
 font-bold
 leading-tight
 text-gray-900
@@ -331,7 +330,7 @@ text-gray-900
             <p
               className="
                 mt-5
-                text-xl
+                text-base
                 text-gray-500
               "
             >
@@ -373,8 +372,8 @@ text-gray-900
                 <>
                   <span
                     className="
-text-5xl
-               font-bold
+                     text-lg
+                     font-bold
                       text-red-600
                     "
                   >
@@ -383,8 +382,8 @@ text-5xl
 
                   <span
                     className="
-text-xl lg:text-2xl
-    text-gray-400
+                   text-base lg:text-2xl
+                    text-gray-400
                       line-through
                     "
                   >
@@ -394,7 +393,7 @@ text-xl lg:text-2xl
               ) : (
                 <span
                   className="
-                    text-5xl
+                    text-lg
                     font-bold
                     text-red-600
                   "
@@ -409,8 +408,8 @@ text-xl lg:text-2xl
             <p
               className="
                 mt-10
-               text-base
-leading-7
+             text-sm
+leading-6
                 text-gray-600
               "
             >
@@ -422,7 +421,7 @@ leading-7
 
             <div>
               <div className="mb-5 flex items-center justify-between">
-                <h3 className="text-xl font-semibold">Select Size</h3>
+                <h3 className="text-base font-semibold">Select Size</h3>
 
                 <span className="text-gray-500">
                   {availableSizes.length} Sizes Available
@@ -436,9 +435,9 @@ leading-7
                     onClick={() => setSelectedSize(variant.size)}
                     className={`
                     h-11
-min-w-[56px]
-rounded-xl
-text-base
+                    min-w-[56px]
+                    rounded-xl
+                    text-base
                       border
                       font-semibold
                       text-lg
@@ -461,7 +460,7 @@ text-base
 
             <div className="mt-12">
               <div className="mb-5 flex items-center justify-between">
-                <h3 className="text-xl font-semibold">Available Colors</h3>
+                <h3 className="text-base font-semibold">Available Colors</h3>
 
                 <span className="text-gray-500">{selectedColor}</span>
               </div>
@@ -546,9 +545,81 @@ rounded-xl   border-2
             </div>
 
             {/* Quantity */}
+            <div className="mt-8">
+  <h3 className="mb-3 text-base font-semibold text-gray-900">
+    Quantity
+  </h3>
 
-            <div className="mt-12">
-              <h3 className="mb-5 text-xl font-semibold">Quantity</h3>
+  <div className="flex items-center gap-3">
+    <button
+      onClick={decreaseQty}
+      className="
+        flex
+        h-10
+        w-10
+        items-center
+        justify-center
+        rounded-lg
+        border
+        border-gray-300
+        bg-white
+        text-gray-700
+        shadow-sm
+        transition-all
+        duration-300
+        hover:border-red-600
+        hover:text-red-600
+      "
+    >
+      <Minus size={16} />
+    </button>
+
+    <span
+      className="
+        flex
+        h-10
+        min-w-[48px]
+        items-center
+        justify-center
+        rounded-lg
+        border
+        border-gray-200
+        bg-gray-50
+        text-base
+        font-semibold
+        text-gray-900
+      "
+    >
+      {quantity}
+    </span>
+
+    <button
+      onClick={increaseQty}
+      className="
+        flex
+        h-10
+        w-10
+        items-center
+        justify-center
+        rounded-lg
+        border
+        border-gray-300
+        bg-white
+        text-gray-700
+        shadow-sm
+        transition-all
+        duration-300
+        hover:border-red-600
+        hover:text-red-600
+      "
+    >
+      <Plus size={16} />
+    </button>
+  </div>
+</div>
+
+            {/* <div className="mt-12">
+              <h3 className="mb-5 text-base font-semibold">Quantity</h3>
 
               <div className="flex items-center gap-5">
                 <button
@@ -595,11 +666,11 @@ rounded-xl   border-2
                   <Plus size={20} />
                 </button>
               </div>
-            </div>
+            </div> */}
 
             {/* Action Buttons */}
 
-            <div className="mt-14 flex gap-5">
+            {/* <div className="mt-14 flex gap-5">
               <button
                 className="
                   flex-1
@@ -654,12 +725,78 @@ rounded-xl   border-2
               >
                 <Heart size={26} />
               </button>
-            </div>
+            </div> */}
+            <div className="mt-10 flex items-center gap-3">
+  <button
+    className="
+      flex-1
+      rounded-full
+      bg-red-600
+      py-3
+      text-sm
+      font-semibold
+      text-white
+      shadow-md
+      transition-all
+      duration-300
+      hover:bg-red-700
+      hover:shadow-lg
+    "
+  >
+    Add To Cart
+  </button>
+
+  <button
+    className="
+      flex-1
+      rounded-full
+      border
+      border-red-600
+      bg-white
+      py-3
+      text-sm
+      font-semibold
+      text-red-600
+      shadow-sm
+      transition-all
+      duration-300
+      hover:bg-red-600
+      hover:text-white
+      hover:shadow-lg
+    "
+  >
+    Buy Now
+  </button>
+
+  <button
+    className="
+      flex
+      h-11
+      w-11
+      shrink-0
+      items-center
+      justify-center
+      rounded-full
+      border
+      border-gray-300
+      bg-white
+      text-gray-700
+      shadow-sm
+      transition-all
+      duration-300
+      hover:border-red-600
+      hover:text-red-600
+      hover:shadow-md
+    "
+  >
+    <Heart size={18} />
+  </button>
+</div>
 
             <div className="my-14 border-t" />
             {/* Delivery Services */}
 
-            <div className="space-y-5">
+            {/* <div className="space-y-5">
               <div className="flex items-center gap-5 rounded-3xl bg-white p-6 shadow-md">
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-red-50 text-red-600">
                   <Truck size={28} />
@@ -701,7 +838,7 @@ rounded-xl   border-2
                   </p>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
 
@@ -715,7 +852,7 @@ rounded-xl   border-2
               More Collections
             </span>
 
-            <h2 className="mt-3 text-5xl font-bold">You May Also Like</h2>
+            <h2 className="mt-3 text-lg font-bold">You May Also Like</h2>
           </div>
 
           <div className="grid gap-8 md:grid-cols-2 xl:grid-cols-4">
