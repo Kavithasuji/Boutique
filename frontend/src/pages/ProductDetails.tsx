@@ -1,7 +1,5 @@
-
-
 import { useEffect, useMemo, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import {
   Heart,
   Minus,
@@ -58,6 +56,9 @@ interface Product {
 
 const ProductDetails = () => {
   const { slug } = useParams();
+  const [searchParams] = useSearchParams();
+
+  const selectedColorFromUrl = searchParams.get("color");
   const [relatedProducts, setRelatedProducts] = useState<Product[]>([]);
 
   const [loading, setLoading] = useState(true);
@@ -90,8 +91,14 @@ const ProductDetails = () => {
       loadRelatedProducts(data.category.slug, data.id);
 
       if (data.colors.length > 0) {
-        setSelectedImage(data.colors[0].imageUrl);
-        setSelectedColor(data.colors[0].color);
+        const selected =
+          data.colors.find(
+            (c: { color: string | null }) => c.color === selectedColorFromUrl,
+          ) || data.colors[0];
+
+        setSelectedColor(selected.color);
+
+        setSelectedImage(selected.imageUrl);
       }
     } catch (error) {
       console.log(error);
@@ -174,8 +181,8 @@ const ProductDetails = () => {
     );
   }
   return (
-  <section className="min-h-screen bg-[#FAF7F2] py-10">
-  <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <section className="min-h-screen bg-[#FAF7F2] py-10">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb */}
 
         <div className="mb-10 flex items-center gap-3 text-sm text-gray-500">
@@ -200,7 +207,7 @@ const ProductDetails = () => {
         {/* Main Layout */}
 
         <div
-       className="
+          className="
 grid
 grid-cols-1
 xl:grid-cols-[55%_45%]
@@ -214,7 +221,7 @@ items-start
             {/* Main Image */}
 
             <div
-      className="
+              className="
 relative
 overflow-hidden
 rounded-2xl
@@ -227,7 +234,7 @@ border-gray-200
               <img
                 src={selectedImage}
                 alt={product.name}
-               className="
+                className="
 h-[420px]
 sm:h-[520px]
 lg:h-[620px]
@@ -306,7 +313,7 @@ lg:w-24
             {/* Product Name */}
 
             <h1
-             className="
+              className="
 mt-3
 text-3xl
 sm:text-4xl
@@ -437,7 +444,6 @@ text-base
                       text-lg
                       transition-all
                       duration-300
-
                       ${
                         selectedSize === variant.size
                           ? "border-red-600 bg-red-600 text-white shadow-lg"
@@ -700,8 +706,6 @@ rounded-xl   border-2
         </div>
 
         {/* Product Details */}
-
-      
 
         {/* Related Products */}
 
