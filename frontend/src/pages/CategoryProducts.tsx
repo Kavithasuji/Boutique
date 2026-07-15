@@ -292,11 +292,10 @@ const CategoryProducts = () => {
                     onClick={() => toggleSize(size)}
                     className={`rounded-full border px-5 py-2 transition
 
-                    ${
-                      selectedSizes.includes(size)
+                    ${selectedSizes.includes(size)
                         ? "bg-red-600 text-white border-red-600"
                         : "bg-white hover:bg-red-50"
-                    }`}
+                      }`}
                   >
                     {size}
                   </button>
@@ -310,8 +309,10 @@ const CategoryProducts = () => {
               {filteredProducts.map((product) => (
                 <Link
                   key={product.id}
-                  to={`/product/${product.slug}`}
-                  onClick={() => console.log(product.slug)}
+                  to={`/product/${product.slug}?color=${product.color}`}
+                  state={{
+                    selectedColor: product.color,
+                  }} onClick={() => console.log(product.slug)}
                   className="group overflow-hidden rounded-[30px] bg-white shadow-lg transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl"
                 >
                   <div className="relative overflow-hidden">
@@ -390,5 +391,4 @@ const CategoryProducts = () => {
     </section>
   );
 };
-
 export default CategoryProducts;

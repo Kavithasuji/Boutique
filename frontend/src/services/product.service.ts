@@ -39,11 +39,15 @@ export const createProduct = async (data: FormData) => {
 };
 
 export const updateProduct = async (id: string, data: FormData) => {
-  const response = await axios.patch(`/products/${id}`, buildProductFormData(data), {
-    headers: {
-      "Content-Type": "multipart/form-data",
+  const response = await axios.patch(
+    `/products/${id}`,
+    buildProductFormData(data),
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     },
-  });
+  );
   return response.data;
 };
 
