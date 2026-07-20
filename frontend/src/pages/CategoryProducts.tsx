@@ -1,7 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { SlidersHorizontal } from "lucide-react";
-
 import { getProductsByCategory } from "../services/product.service";
 
 interface ProductColor {
@@ -128,17 +126,9 @@ const CategoryProducts = () => {
     );
   }, [products]);
 
-  /*
-      Available Colors
-  */
-
   const colors = useMemo(() => {
     return [...new Set(productCards.map((p) => p.color))];
   }, [productCards]);
-
-  /*
-      Available Sizes
-  */
 
   const sizes = useMemo(() => {
     return [...new Set(productCards.flatMap((p) => p.sizes))];
@@ -195,196 +185,642 @@ const CategoryProducts = () => {
     );
   };
 
-  if (loading) {
-    return (
-      <div className="flex h-screen items-center justify-center text-3xl font-bold">
-        Loading...
-      </div>
-    );
-  }
+ if (loading) {
   return (
-    <section className="min-h-screen bg-[#FAF7F2] py-16">
-      <div className="mx-auto max-w-[1450px] px-8">
-        {/* Breadcrumb */}
+    <div className="flex min-h-screen items-center justify-center bg-[#111111]">
 
-        <div className="mb-4 text-sm text-gray-500">
-          <Link to="/">Home</Link>
+      <div className="text-center">
 
-          <span className="mx-2">/</span>
+        <div
+          className="
+          mx-auto
+          h-14
+          w-14
+          animate-spin
+          rounded-full
+          border-[3px]
+          border-[#d72638]/20
+          border-t-[#d72638]
+          "
+        />
 
-          <span className="font-medium">{category?.name}</span>
-        </div>
+        <p
+          className="
+          mt-8
+          text-sm
+          uppercase
+          tracking-[4px]
+          text-gray-400
+          "
+        >
+          Loading Collection...
+        </p>
 
-        {/* Header */}
+      </div>
 
-        <div className="mb-12 flex items-center justify-between">
-          <div>
-            <h1 className="text-5xl font-bold text-gray-900">
-              {category?.name}
-            </h1>
+    </div>
+  );
+}
 
-            <p className="mt-3 text-lg text-gray-500">
-              Showing {filteredProducts.length} Variants
-            </p>
+
+    return (
+  <section className="min-h-screen bg-[#111111] py-20">
+
+    <div className="mx-auto max-w-[1500px] px-8">
+
+      {/* Breadcrumb */}
+
+      <div
+        className="
+        flex
+        items-center
+        gap-3
+        text-sm
+        tracking-wide
+        text-gray-500
+        "
+      >
+
+        <Link
+          to="/"
+          className="transition hover:text-[#d72638]"
+        >
+          Home
+        </Link>
+
+        <span className="text-gray-700">/</span>
+
+        <span className="uppercase tracking-[2px] text-[#d72638]">
+          {category?.name}
+        </span>
+
+      </div>
+
+      {/* Header */}
+
+
+
+      <div className="mt-12 grid grid-cols-[300px_1fr] gap-10">
+<aside
+  className="
+  sticky
+  top-28
+  h-fit
+  overflow-hidden
+  rounded-[32px]
+  border
+  border-white/10
+  bg-[#181818]
+  p-8
+  shadow-[0_20px_60px_rgba(0,0,0,0.35)]
+  "
+>
+
+  {/* Header */}
+
+  <div className="border-b border-white/10 pb-6">
+
+    <span
+      className="
+      text-xs
+      uppercase
+      tracking-[4px]
+      text-[#ff7a86]
+      "
+    >
+      Refine Selection
+    </span>
+
+    <h2
+      className="
+      mt-3
+      text-3xl
+      font-light
+      uppercase
+      tracking-[3px]
+      text-white
+      "
+      style={{
+        fontFamily: "'Montserrat', sans-serif",
+      }}
+    >
+      Filters
+    </h2>
+
+  </div>
+
+  {/* Price */}
+
+  <div className="mt-8 border-b border-white/10 pb-8">
+
+    <h3
+      className="
+      mb-6
+      text-sm
+      font-medium
+      uppercase
+      tracking-[3px]
+      text-white
+      "
+    >
+      Price Range
+    </h3>
+
+    <input
+      type="range"
+      min={minPrice}
+      max={maxPrice}
+      value={selectedPrice}
+      onChange={(e) => setSelectedPrice(Number(e.target.value))}
+      className="w-full accent-[#d72638]"
+    />
+
+    <div className="mt-5 flex items-center justify-between">
+
+      <span className="text-gray-500">
+        ₹{minPrice}
+      </span>
+
+      <span
+        className="
+        rounded-full
+        border
+        border-[#d72638]/30
+        bg-[#d72638]/10
+        px-4
+        py-1
+        text-sm
+        text-[#ff7a86]
+        "
+      >
+        ₹{selectedPrice}
+      </span>
+
+    </div>
+
+  </div>
+
+  {/* Colors */}
+
+  <div className="mt-8 border-b border-white/10 pb-8">
+
+    <h3
+      className="
+      mb-6
+      text-sm
+      font-medium
+      uppercase
+      tracking-[3px]
+      text-white
+      "
+    >
+      Colors
+    </h3>
+
+    <div className="space-y-4">
+
+      {colors.map((color) => (
+
+        <label
+          key={color}
+          className="
+          group
+          flex
+          cursor-pointer
+          items-center
+          justify-between
+          "
+        >
+
+          <div className="flex items-center gap-3">
+
+            <input
+              type="checkbox"
+              checked={selectedColors.includes(color)}
+              onChange={() => toggleColor(color)}
+              className="
+              h-4
+              w-4
+              accent-[#d72638]
+              "
+            />
+
+            <span
+              className="
+              text-gray-300
+              transition
+              group-hover:text-white
+              "
+            >
+              {color}
+            </span>
+
           </div>
 
-          <button className="flex items-center gap-2 rounded-xl border bg-white px-5 py-3 shadow">
-            <SlidersHorizontal size={18} />
-            Filters
-          </button>
-        </div>
-        {/* Layout */}
+        </label>
 
-        <div className="grid grid-cols-[300px_1fr] gap-10">
-          {/* Sidebar */}
+      ))}
 
-          <aside className="rounded-3xl bg-white p-8 shadow-xl h-fit sticky top-28">
-            <h2 className="mb-8 text-2xl font-bold">Filters</h2>
+    </div>
+
+  </div>
+
+  {/* Sizes */}
+
+  <div className="mt-8">
+
+    <h3
+      className="
+      mb-6
+      text-sm
+      font-medium
+      uppercase
+      tracking-[3px]
+      text-white
+      "
+    >
+      Sizes
+    </h3>
+
+    <div className="flex flex-wrap gap-3">
+
+      {sizes.map((size) => (
+
+        <button
+          key={size}
+          onClick={() => toggleSize(size)}
+          className={`
+            rounded-full
+            border
+            px-5
+            py-2.5
+            text-sm
+            uppercase
+            tracking-[2px]
+            transition-all
+            duration-300
+            ${
+              selectedSizes.includes(size)
+                ? "border-[#d72638] bg-[#d72638] text-white shadow-[0_8px_25px_rgba(215,38,56,0.30)]"
+                : "border-white/10 bg-transparent text-gray-300 hover:border-[#d72638] hover:text-white"
+            }
+          `}
+        >
+          {size}
+        </button>
+
+      ))}
+
+    </div>
+
+  </div>
+
+</aside>
+{filteredProducts.length === 0 ? (
+  <div className="flex min-h-[700px] items-center justify-center rounded-[32px] border border-white/10 bg-[#181818]">
+    <div className="text-center">
+      <h2
+        className="text-4xl font-light uppercase tracking-[4px] text-white"
+        style={{ fontFamily: "'Montserrat', sans-serif" }}
+      >
+        No Products Found
+      </h2>
+
+      <p className="mt-5 text-gray-400">
+        Try changing the filters.
+      </p>
+    </div>
+  </div>
+) : (
+
+  <div className="grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
+
+    {filteredProducts.map((product) => (
+
+      <Link
+        key={product.id}
+        to={`/product/${product.slug}?color=${product.color}`}
+        state={{
+          selectedColor: product.color,
+        }}
+        className="group"
+      >
+
+       <article
+  className="
+  overflow-hidden
+  rounded-[28px]
+  border
+  border-white/5
+  bg-[#181818]
+  transition-all
+  duration-500
+  hover:-translate-y-2
+  hover:border-[#d72638]/40
+  hover:shadow-[0_20px_60px_rgba(215,38,56,0.15)]
+  "
+>
+
+          {/* Image */}
+
+          <div className="relative overflow-hidden">
+
+            <img
+              src={product.image}
+              alt={product.name}
+              className="
+h-[360px]
+              w-full
+              object-cover
+              transition-transform
+              duration-700
+              group-hover:scale-105
+              "
+            />
+
+            {/* Gradient */}
+
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+            {/* Color Badge */}
+
+            <div
+              className="
+              absolute
+              left-5
+              top-5
+              rounded-full
+              border
+              border-[#d72638]/40
+              bg-black/70
+              px-4
+              py-2
+              backdrop-blur-xl
+              "
+            >
+
+              <span
+              className="
+text-[10px]
+uppercase
+tracking-[4px]
+text-[#ff7a86]
+"
+              >
+                {product.color}
+              </span>
+
+            </div>
+
+            {/* View Overlay */}
+
+            <div
+              className="
+              absolute
+              inset-0
+              flex
+              items-center
+              justify-center
+              bg-black/40
+              opacity-0
+              transition
+              duration-500
+              group-hover:opacity-100
+              "
+            >
+
+              <div
+                className="
+                rounded-full
+                border
+                border-white/20
+                bg-white/10
+                px-7
+                py-3
+                backdrop-blur-xl
+                "
+              >
+
+                <span
+                  className="
+                  text-sm
+                  uppercase
+                  tracking-[3px]
+                  text-white
+                  "
+                >
+                  View Details
+                </span>
+
+              </div>
+
+            </div>
+
+          </div>
+
+          {/* Content */}
+
+          <div className="p-5">
+
+            <p
+              className="
+              text-xs
+              uppercase
+              tracking-[3px]
+              text-[#ff7a86]
+              "
+            >
+              {product.brand}
+            </p>
+
+            <h4
+              className="
+              line-clamp-2
+              text-xl
+              font-light
+              uppercase
+              tracking-[1px]
+              text-white
+              "
+              // style={{
+              //   fontFamily: "'Montserrat', sans-serif",
+              // }}
+            >
+              {product.name}
+            </h4>
+
+            {/* Sizes */}
+
+            <div className="mt-1 flex flex-wrap gap-2">
+
+              {product.sizes.map((size) => (
+
+                <span
+                  key={size}
+                  className="
+                  rounded-full
+                  border
+                  border-white/10
+                  px-3
+                  py-1
+                  text-xs
+                  uppercase
+                  tracking-[2px]
+                  text-gray-300
+                  "
+                >
+                  {size}
+                </span>
+
+              ))}
+
+            </div>
 
             {/* Price */}
 
-            <div className="mb-10">
-              <h3 className="mb-4 text-lg font-semibold">Price</h3>
+            <div className="mt-7 flex items-end gap-3">
 
-              <input
-                type="range"
-                min={minPrice}
-                max={maxPrice}
-                value={selectedPrice}
-                onChange={(e) => setSelectedPrice(Number(e.target.value))}
-                className="w-full accent-red-600"
-              />
-              <div className="mt-4 flex justify-between text-sm text-gray-500">
-                <span>₹{minPrice}</span>
-                <span>₹{selectedPrice}</span>
-              </div>
+              {product.discountPrice < product.price ? (
+                <>
+
+                  <span className="text-3xl font-semibold text-[#d72638]">
+                    ₹{product.discountPrice}
+                  </span>
+
+                  <span className="pb-1 text-gray-500 line-through">
+                    ₹{product.price}
+                  </span>
+
+                </>
+              ) : (
+
+                <span className="text-3xl font-semibold text-[#d72638]">
+                  ₹{product.price}
+                </span>
+
+              )}
+
             </div>
-            <div className="mb-10">
-              <h3 className="mb-5 text-lg font-semibold">Colors</h3>
-              <div className="space-y-3">
-                {colors.map((color) => (
-                  <label
-                    key={color}
-                    className="flex cursor-pointer items-center gap-3"
-                  >
-                    <input
-                      type="checkbox"
-                      checked={selectedColors.includes(color)}
-                      onChange={() => toggleColor(color)}
-                      className="h-4 w-4 accent-red-600"
-                    />
 
-                    <span>{color}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
-            <div>
-              <h3 className="mb-5 text-lg font-semibold">Sizes</h3>
-              <div className="flex flex-wrap gap-3">
-                {sizes.map((size) => (
-                  <button
-                    key={size}
-                    onClick={() => toggleSize(size)}
-                    className={`rounded-full border px-5 py-2 transition
+            {/* Button */}
 
-                    ${selectedSizes.includes(size)
-                        ? "bg-red-600 text-white border-red-600"
-                        : "bg-white hover:bg-red-50"
-                      }`}
-                  >
-                    {size}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </aside>
-
-          <div>
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-              {filteredProducts.map((product) => (
-                <Link
-                  key={product.id}
-                  to={`/product/${product.slug}?color=${product.color}`}
-                  state={{
-                    selectedColor: product.color,
-                  }} onClick={() => console.log(product.slug)}
-                  className="group overflow-hidden rounded-[30px] bg-white shadow-lg transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl"
-                >
-                  <div className="relative overflow-hidden">
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="h-[430px] w-full object-cover transition duration-700 group-hover:scale-110"
-                    />
-                    <div className="absolute left-5 top-5 rounded-full bg-white px-4 py-2 text-sm font-semibold shadow">
-                      {product.color}
-                    </div>
-                  </div>
-
-                  {/* Details */}
-
-                  <div className="p-6">
-                    <h2 className="line-clamp-2 text-2xl font-bold text-gray-900">
-                      {product.name}
-                    </h2>
-                    <p className="mt-2 text-gray-500">{product.brand}</p>
-                    <div className="mt-5 flex flex-wrap gap-2">
-                      {product.sizes.map((size) => (
-                        <span
-                          key={size}
-                          className="rounded-full border bg-gray-50 px-3 py-1 text-xs"
-                        >
-                          {size}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="mt-6 flex items-center gap-3">
-                      {product.discountPrice < product.price ? (
-                        <>
-                          <span className="text-2xl font-bold text-red-600">
-                            ₹{product.discountPrice}
-                          </span>
-
-                          <span className="text-gray-400 line-through">
-                            ₹{product.price}
-                          </span>
-                        </>
-                      ) : (
-                        <span className="text-2xl font-bold text-red-600">
-                          ₹{product.price}
-                        </span>
-                      )}
-                    </div>
-                    <button
-                      className="
-              mt-6
+            {/* <button
+              className="
+              mt-7
+              flex
               w-full
+              items-center
+              justify-center
               rounded-full
-              bg-red-600
-              py-3
+              border
+              border-[#d72638]
+              bg-[#d72638]/10
+              py-3.5
+              text-sm
               font-semibold
+              uppercase
+              tracking-[2px]
               text-white
-              transition
-              hover:bg-red-700
-            "
-                    >
-                      View Product
-                    </button>
-                  </div>
-                </Link>
-              ))}
-            </div>
+              transition-all
+              duration-300
+              hover:bg-[#d72638]
+              "
+            >
+              View Product
+            </button> */}
+
           </div>
-          {filteredProducts.length === 0 && (
-            <div className="rounded-3xl bg-white p-20 text-center shadow-xl">
-              <h2 className="text-3xl font-bold">No Products Found</h2>
-              <p className="mt-5 text-gray-500">Try changing the filters.</p>
-            </div>
-          )}
-        </div>
-      </div>
-    </section>
-  );
-};
+
+        </article>
+
+      </Link>
+
+    ))}
+
+  </div>
+
+)}
+<div
+  className="
+  flex
+  min-h-[700px]
+  items-center
+  justify-center
+  rounded-[32px]
+  border
+  border-white/10
+  bg-[#181818]
+  p-12
+  "
+>
+
+  <div className="text-center">
+
+    <div
+   className="
+text-[10px]
+uppercase
+tracking-[3px]
+text-[#ff7a86]
+
+
+      "
+    >
+
+      <span className="text-5xl">
+        ✦
+      </span>
+
+    </div>
+
+    <h2
+      className="
+      mt-10
+      text-5xl
+      font-light
+      uppercase
+      tracking-[4px]
+      text-white
+      "
+      style={{
+        fontFamily: "'Montserrat', sans-serif",
+      }}
+    >
+      No Products Found
+    </h2>
+
+    <div
+      className="
+      mx-auto
+      mt-6
+      h-[2px]
+      w-24
+      rounded-full
+      bg-[#d72638]
+      "
+    />
+
+    <p
+      className="
+      mx-auto
+      mt-8
+      max-w-md
+      leading-8
+      text-gray-400
+      "
+    >
+      No products match your current filters.
+      Try selecting different sizes, colors,
+      or adjusting the price range.
+    </p>
+
+  </div>
+
+</div>
+</div>
+</div>
+
+</section>
+
+    )};
 export default CategoryProducts;

@@ -11,44 +11,64 @@ export class CategoriesService {
     private minioService: MinioService,
   ) {}
 
-  async create(
-    createCategoryDto: CreateCategoryDto,
-    file?: Express.Multer.File,
-  ) {
+async create(
+  createCategoryDto: CreateCategoryDto,
+  file?: Express.Multer.File,
+) {
+  try {
+    console.log('========== CREATE CATEGORY ==========');
+    console.log('DTO:', createCategoryDto);
+    console.log('File:', file);
+
     const { name, description, isActive } = createCategoryDto;
 
-    // Generate slug from name
+    console.log('Generating slug...');
     const slug = name
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '');
 
-    // Check if category with same slug already exists
+    console.log('Slug:', slug);
+
+    console.log('Checking existing category...');
     const existingCategory = await this.prisma.category.findUnique({
       where: { slug },
     });
 
+    console.log('Existing Category:', existingCategory);
+
     if (existingCategory) {
-      throw new BadRequestException('Category with this name already exists');
+      throw new BadRequestException(
+        'Category with this name already exists',
+      );
     }
 
-    // Upload image to MinIO if provided
     let imageUrl: string | null = null;
+
     if (file) {
+      console.log('Uploading image...');
+
       const uploadedFile = {
         originalname: file.originalname,
         buffer: file.buffer,
         size: file.size,
         mimetype: file.mimetype,
       };
+
       const objectName = await this.minioService.uploadFile(
         uploadedFile,
         'categories',
       );
+
+      console.log('Object Name:', objectName);
+
       imageUrl = this.minioService.getFileUrl(objectName);
+
+      console.log('Image URL:', imageUrl);
     }
 
-    // Create category
+    console.log('Creating category in database...');
+
     const category = await this.prisma.category.create({
       data: {
         name,
@@ -59,8 +79,17 @@ export class CategoriesService {
       },
     });
 
+    console.log('Category Created:', category);
+
     return category;
+  } catch (error) {
+    console.error('========== CATEGORY ERROR ==========');
+    console.error(error);
+    // console.error(error.stack);
+
+    throw error;
   }
+}
 
   async findAll() {
     return this.prisma.category.findMany({

@@ -47,7 +47,6 @@ export class MinioService implements OnModuleInit {
     
     try {
       await this.client.setBucketPolicy(this.bucketName, JSON.stringify(policy));
-      console.log(` Bucket "${this.bucketName}" policy set to public read`);
     } catch (error) {
       console.error(` Error setting bucket policy:`, error);
     }
@@ -84,15 +83,22 @@ async uploadFile(
     }
   }
 
+  // getFileUrl(objectName: string): string {
+  //   const endpoint =
+  //     this.configService.get<string>('MINIO_ENDPOINT');
+
+  //   const port =
+  //     this.configService.get<string>('MINIO_PORT');
+
+  //   return `http://${endpoint}:${port}/${this.bucketName}/${objectName}`;
+  // }
   getFileUrl(objectName: string): string {
-    const endpoint =
-      this.configService.get<string>('MINIO_ENDPOINT');
+  const baseUrl =
+    this.configService.get<string>('MINIO_PUBLIC_URL') ??
+    `http://${this.configService.get('MINIO_ENDPOINT')}:${this.configService.get('MINIO_PORT')}`;
 
-    const port =
-      this.configService.get<string>('MINIO_PORT');
-
-    return `http://${endpoint}:${port}/${this.bucketName}/${objectName}`;
-  }
+  return `${baseUrl}/${this.bucketName}/${objectName}`;
+}
 
   async deleteFile(objectName: string): Promise<void> {
     await this.client.removeObject(

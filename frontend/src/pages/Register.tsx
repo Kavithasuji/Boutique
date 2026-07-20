@@ -1,128 +1,255 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { authService } from '../services/auth.service';
+
+
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { FaUserPlus } from "react-icons/fa";
+import { authService } from "../services/auth.service";
+import logo from "../assets/logo/cupi.webp";
 
 const Register = () => {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-  });
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+  });
+
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
-    setError('');
-    setSuccess('');
+
+    setError("");
+    setSuccess("");
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (
+    e: React.FormEvent
+  ) => {
     e.preventDefault();
-    setError('');
-    setSuccess('');
+
+    setError("");
+    setSuccess("");
     setLoading(true);
 
     try {
-      const response = await authService.register(formData.name, formData.email);
+      const response =
+        await authService.register(
+          formData.name,
+          formData.email
+        );
+
       setSuccess(response.message);
-      
-      // Store email for verification step
-      sessionStorage.setItem('registration_email', formData.email);
-      
-      // Redirect to OTP verification after 2 seconds
+
+      sessionStorage.setItem(
+        "registration_email",
+        formData.email
+      );
+
       setTimeout(() => {
-        navigate('/verify-otp');
+        navigate("/verify-otp");
       }, 2000);
+
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Registration failed. Please try again.');
+
+      setError(
+        err.response?.data?.message ||
+          "Registration failed. Please try again."
+      );
+
     } finally {
+
       setLoading(false);
+
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Create Your Account
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Join Boutique and start shopping
-          </p>
-        </div>
-        
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
-            {error}
-          </div>
-        )}
-        
-        {success && (
-          <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded">
-            {success}
-          </div>
-        )}
+    <div
+      className="relative flex h-screen items-center justify-center overflow-hidden bg-cover bg-center bg-no-repeat"
+      style={{
+        backgroundImage:
+          "url('https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1800&q=80')",
+      }}
+    >
+      <div className="absolute inset-0 bg-black/60"></div>
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
+      <div className="relative z-10 flex h-full w-full flex-col items-center justify-center px-6 py-3">
+
+        <h1
+          className="mb-1 text-center text-3xl font-light uppercase tracking-[8px] text-white"
+          style={{
+            fontFamily: "'Montserrat', sans-serif",
+          }}
+        >
+          CUPIDANZA
+        </h1>
+
+        <p className="mb-4 text-center text-xs uppercase tracking-[6px] text-red-300">
+          Fashion Store
+        </p>
+
+        <div className="w-full max-w-lg rounded-sm bg-black/75 p-6 shadow-[0_25px_60px_rgba(0,0,0,0.55)] backdrop-blur-md">
+
+          <div className="mb-4 flex justify-center">
+            <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white">
+
+              <img
+                src={logo}
+                alt="Cupidanza"
+                className="h-12 w-12 object-contain"
+              />
+
+            </div>
+          </div>
+
+          <div className="mb-6 text-center">
+
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#d72638]">
+              <FaUserPlus className="text-white" />
+            </div>
+
+            <h2 className="text-2xl font-light text-white">
+              Create Account
+            </h2>
+
+            <p className="mt-2 text-sm text-gray-300">
+              Join Cupidanza and begin your luxury shopping experience.
+            </p>
+
+          </div>
+                    {error && (
+            <div className="mb-4 rounded border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+              {error}
+            </div>
+          )}
+
+          {success && (
+            <div className="mb-4 rounded border border-green-500/40 bg-green-500/10 px-4 py-3 text-sm text-green-300">
+              {success}
+            </div>
+          )}
+
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-4"
+          >
+            {/* Full Name */}
+
             <div>
-              <label htmlFor="name" className="sr-only">
+              <label className="mb-2 block text-sm font-medium uppercase tracking-wider text-white">
                 Full Name
               </label>
+
               <input
                 id="name"
                 name="name"
                 type="text"
                 required
-                className="appearance-none rounded-none rounded-t-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Full Name"
+                placeholder="Enter your full name"
                 value={formData.name}
                 onChange={handleChange}
+                className="h-11 w-full rounded-sm bg-white px-4 text-gray-800 outline-none transition focus:ring-2 focus:ring-[#d72638]"
               />
             </div>
+
+            {/* Email */}
+
             <div>
-              <label htmlFor="email" className="sr-only">
+              <label className="mb-2 block text-sm font-medium uppercase tracking-wider text-white">
                 Email Address
               </label>
+
               <input
                 id="email"
                 name="email"
                 type="email"
                 required
-                className="appearance-none rounded-none rounded-b-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Email Address"
+                placeholder="Enter your email"
                 value={formData.email}
                 onChange={handleChange}
+                className="h-11 w-full rounded-sm bg-white px-4 text-gray-800 outline-none transition focus:ring-2 focus:ring-[#d72638]"
               />
             </div>
-          </div>
 
-          <div>
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="h-11 w-full rounded-sm bg-[#d72638] text-base font-semibold uppercase tracking-[3px] text-white transition duration-300 hover:bg-[#b81f2f] disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {loading ? 'Creating Account...' : 'Create Account'}
+              {loading
+                ? "Creating Account..."
+                : "Create Account"}
             </button>
-          </div>
 
-          <div className="text-center">
-            <span className="text-sm text-gray-600">
-              Already have an account?{' '}
-              <Link to="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
-                Sign in
-              </Link>
-            </span>
-          </div>
-        </form>
+            <div className="flex items-center">
+
+              <div className="h-px flex-1 bg-white/20"></div>
+
+              <span className="px-4 text-xs uppercase tracking-[5px] text-gray-400">
+                Cupidanza
+              </span>
+
+              <div className="h-px flex-1 bg-white/20"></div>
+
+            </div>
+
+            <div className="text-center">
+
+              <p className="text-sm leading-7 text-gray-300">
+                Register your account to discover
+                premium collections, exclusive offers,
+                and a luxurious shopping experience
+                with Cupidanza Fashion Store.
+              </p>
+
+            </div>
+
+            <div className="text-center">
+
+              <span className="text-sm text-gray-300">
+                Already have an account?{" "}
+
+                <Link
+                  to="/login"
+                  className="font-semibold text-[#ff5b67] transition hover:text-white"
+                >
+                  Sign In
+                </Link>
+
+              </span>
+
+            </div>
+
+          </form>
+
+        </div>
+
+        <div className="mt-4 text-center">
+
+          <p className="text-sm uppercase tracking-[3px] text-gray-300">
+            CUPIDANZA FASHION STORE
+          </p>
+
+          <p className="mt-2 text-xs text-gray-400">
+            Luxury Fashion • Premium Quality • Timeless Elegance
+          </p>
+
+          <p className="mt-4 text-xs text-gray-500">
+            © 2026 Cupidanza Boutique. All Rights Reserved.
+          </p>
+
+        </div>
+
       </div>
+
     </div>
   );
 };

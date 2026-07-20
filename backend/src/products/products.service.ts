@@ -18,8 +18,7 @@ export class ProductsService {
   files?: { [fieldname: string]: Express.Multer.File[] },
 ) {
   try {
-    console.log('========== CREATE PRODUCT ==========');
-    console.log('Incoming DTO:', createProductDto);
+
 
     const {
       categoryId,
@@ -35,39 +34,29 @@ export class ProductsService {
       colorNames = [],
     } = createProductDto as any;
 
-    console.log('Category ID:', categoryId);
-    console.log('Product Name:', name);
-    console.log('Variants:', variants);
-    console.log('Color Names:', colorNames);
-
-    console.log('Checking category...');
+  
 
     const category = await this.prisma.category.findUnique({
       where: { id: categoryId },
     });
 
-    console.log('Category Result:', category);
 
     if (!category) {
       throw new NotFoundException('Category not found');
     }
 
-    console.log('Generating slug...');
 
     const slug = name
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '');
 
-    console.log('Slug:', slug);
 
-    console.log('Checking duplicate product...');
 
     const existingProduct = await this.prisma.product.findUnique({
       where: { slug },
     });
 
-    console.log('Duplicate Product:', existingProduct);
 
     if (existingProduct) {
       throw new BadRequestException(
@@ -75,21 +64,16 @@ export class ProductsService {
       );
     }
 
-    console.log('Uploading color images...');
 
     const uploadedColors: any[] = [];
 
     if (files?.colorImages?.length) {
-      console.log(
-        'Total Color Images:',
-        files.colorImages.length,
-      );
+     
 
       for (let i = 0; i < files.colorImages.length; i++) {
         const file = files.colorImages[i];
 
-        console.log('Uploading Image', i + 1);
-        console.log(file.originalname);
+      
 
         const uploadedFile = {
           originalname: file.originalname,
@@ -103,20 +87,16 @@ export class ProductsService {
           'products/colors',
         );
 
-        console.log('Uploaded Object:', objectName);
 
         uploadedColors.push({
           color: colorNames[i],
           imageUrl: this.minioService.getFileUrl(objectName),
         });
 
-        console.log('Current Uploaded Colors:', uploadedColors);
       }
     } else {
-      console.log('No color images received');
     }
 
-    console.log('Creating Product...');
 
     const product = await this.prisma.product.create({
       data: {
@@ -144,13 +124,10 @@ export class ProductsService {
       },
     });
 
-    console.log('Product Created Successfully');
-    console.log(product);
+   
 
-    console.log('Creating Variants...');
 
     for (const variant of variants) {
-      console.log('Variant:', variant);
 
       const color = await this.prisma.productColor.findFirst({
         where: {
@@ -159,10 +136,8 @@ export class ProductsService {
         },
       });
 
-      console.log('Matched Color:', color);
 
       if (!color) {
-        console.log('Color Not Found. Skipping...');
         continue;
       }
 
@@ -184,10 +159,8 @@ export class ProductsService {
           },
         });
 
-      console.log('Variant Created:', createdVariant);
     }
 
-    console.log('Fetching Final Product...');
 
     const result = await this.prisma.product.findUnique({
       where: {
@@ -205,16 +178,10 @@ export class ProductsService {
       },
     });
 
-    console.log('SUCCESS');
-    console.log(result);
-    console.log('================================');
 
     return result;
   } catch (error) {
-    console.log('================================');
-    console.log('CREATE PRODUCT FAILED');
-    console.log(error);
-    console.log('================================');
+ 
 
     throw error;
   }
