@@ -395,27 +395,52 @@ export class CustomerAuthService {
     };
   }
 
-  async getProfile(userId: string) {
-    const user = await this.prisma.user.findUnique({
-      where: { id: userId },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        role: true,
-        accountStatus: true,
-        isEmailVerified: true,
-        createdAt: true,
+async getProfile(userId: string) {
+  const user = await this.prisma.user.findUnique({
+    where: {
+      id: userId,
+    },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      accountStatus: true,
+      isEmailVerified: true,
+      createdAt: true,
+
+      addresses: {
+        orderBy: [
+          {
+            isDefault: "desc",
+          },
+          {
+            createdAt: "desc",
+          },
+        ],
+        select: {
+          id: true,
+          fullName: true,
+          phone: true,
+          addressLine1: true,
+          addressLine2: true,
+          city: true,
+          state: true,
+          country: true,
+          postalCode: true,
+          isDefault: true,
+          createdAt: true,
+        },
       },
-    });
+    },
+  });
 
-    if (!user) {
-      throw new BadRequestException('User not found');
-    }
-
-    return user;
+  if (!user) {
+    throw new BadRequestException("User not found");
   }
 
+  return user;
+}
   private async generateAndSendOtp(userId: string, email: string, name: string) {
     // Generate 6-digit OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();

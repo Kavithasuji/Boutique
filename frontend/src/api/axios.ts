@@ -1,7 +1,10 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:3000", // NestJS API
+  baseURL:
+    window.location.hostname === "localhost"
+      ? "http://localhost:3000"
+      : "https://boot-newspaper-excited-dave.trycloudflare.com",
   headers: {
     "Content-Type": "application/json",
   },

@@ -1,6 +1,11 @@
 import { useState, useEffect } from "react";
 import { Plus, Edit, Trash2, Image as ImageIcon } from "lucide-react";
-import { createCategory, getCategories, updateCategory, deleteCategory } from "../../services/category.service";
+import {
+  createCategory,
+  getCategories,
+  updateCategory,
+  deleteCategory,
+} from "../../services/category.service";
 
 interface Category {
   id: string;
@@ -12,7 +17,7 @@ interface Category {
   createdAt: string;
   updatedAt: string;
 }
-  
+
 const Categories = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -78,7 +83,7 @@ const Categories = () => {
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -98,7 +103,7 @@ const Categories = () => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
       setImageFile(file);
-      
+
       // Create preview
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -327,7 +332,7 @@ const Categories = () => {
                     onChange={handleImageChange}
                     className="w-full rounded-lg border border-gray-300 px-3 py-2 file:mr-4 file:rounded-md file:border-0 file:bg-indigo-600 file:px-4 file:py-2 file:text-white hover:file:bg-indigo-700"
                   />
-                  
+
                   {imagePreview && (
                     <div className="relative inline-block">
                       <img
@@ -383,11 +388,10 @@ const Categories = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
           <div className="w-full max-w-md rounded-xl bg-white shadow-xl">
             <div className="p-6">
-              <h3 className="mb-4 text-xl font-semibold">
-                Delete Category
-              </h3>
+              <h3 className="mb-4 text-xl font-semibold">Delete Category</h3>
               <p className="mb-6 text-gray-600">
-                Are you sure you want to delete "{deleteConfirm.name}"? This action cannot be undone.
+                Are you sure you want to delete "{deleteConfirm.name}"? This
+                action cannot be undone.
               </p>
               <div className="flex justify-end gap-3">
                 <button

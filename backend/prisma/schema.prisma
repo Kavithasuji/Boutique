@@ -34,6 +34,13 @@ enum PaymentStatus {
   REFUNDED
 }
 
+enum PaymentSessionStatus {
+  CREATED
+  PROCESSING
+  PROCESSED
+  FAILED
+}
+
 model User {
   id              String        @id @default(uuid())
   name            String
@@ -46,56 +53,98 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  orders           Order[]
-  cartItems        Cart[]
-  otpTokens        OtpToken[]
-  refreshTokens    RefreshToken[]
+  orders              Order[]
+  cartItems           Cart[]
+  addresses           Address[]
+
+  otpTokens           OtpToken[]
+  refreshTokens       RefreshToken[]
   passwordResetTokens PasswordResetToken[]
+  paymentSessions     PaymentSession[]
+
 }
 
+model Address {
+  id            String   @id @default(uuid())
+
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  fullName      String
+  phone         String
+
+  addressLine1  String
+  addressLine2  String?
+
+  city          String
+  state         String
+  country       String
+
+  postalCode    String
+
+  isDefault     Boolean  @default(false)
+
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+
+
 model Category {
-  id          String    @id @default(uuid())
+
+  id          String   @id @default(uuid())
 
   name        String
 
-  slug        String    @unique
+  slug        String   @unique
 
   description String?
 
   image       String?
 
-  isActive    Boolean   @default(true)
+  isActive    Boolean  @default(true)
 
-  createdAt   DateTime  @default(now())
+  createdAt   DateTime @default(now())
 
-  updatedAt   DateTime  @updatedAt
+  updatedAt   DateTime @updatedAt
 
   products    Product[]
+
+  @@index([name])
+  @@index([isActive])
 }
 
 model Product {
-  id            String           @id @default(uuid())
 
-  categoryId     String
-  category       Category         @relation(fields: [categoryId], references: [id])
+  id            String @id @default(uuid())
 
-  name           String
-  slug           String           @unique
-  description    String?
+  categoryId    String
+  category      Category @relation(fields: [categoryId], references: [id])
 
-  price          Decimal          @db.Decimal(10,2)
-  discountPrice  Decimal?         @db.Decimal(10,2)
+  name          String
+  slug          String @unique
 
-  brand          String?
+  description   String?
 
-  isFeatured     Boolean          @default(false)
-  isActive       Boolean          @default(true)
+  price         Decimal @db.Decimal(10,2)
 
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
+  discountPrice Decimal? @db.Decimal(10,2)
 
-  colors         ProductColor[]
-  variants       ProductVariant[]
+  brand         String?
+
+  isFeatured    Boolean @default(false)
+
+  isActive      Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  colors   ProductColor[]
+  variants ProductVariant[]
+
+  @@index([name])
+  @@index([brand])
+  @@index([isActive])
 }
 model ProductColor {
   id          String      @id @default(uuid())
@@ -172,25 +221,35 @@ model Cart {
 }
 
 model Order {
-  id            String          @id @default(uuid())
+  id              String          @id @default(uuid())
 
-  userId        String
+  userId          String
+  user            User            @relation(fields: [userId], references: [id])
 
-  user          User            @relation(fields: [userId], references: [id])
+  // Shipping Address Snapshot
+  shippingName    String
+  shippingPhone   String
 
-  totalAmount   Decimal         @db.Decimal(10,2)
+  addressLine1    String
+  addressLine2    String?
 
-  orderStatus   OrderStatus     @default(PENDING)
+  city            String
+  state           String
+  country         String
+  postalCode      String
 
-  paymentStatus PaymentStatus   @default(PENDING)
+  totalAmount     Decimal         @db.Decimal(10,2)
 
-  createdAt     DateTime        @default(now())
+  orderStatus     OrderStatus     @default(PENDING)
 
-  updatedAt     DateTime        @updatedAt
+  paymentStatus   PaymentStatus   @default(PENDING)
 
-  items         OrderItem[]
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
 
-  payment       Payment?
+  items           OrderItem[]
+
+  payment         Payment?
 }
 
 model OrderItem {
@@ -269,4 +328,23 @@ model PasswordResetToken {
 
   @@index([userId])
   @@index([token])
+}
+
+
+model PaymentSession {
+  id               String   @id @default(cuid())
+
+  userId           String
+  user             User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  razorpayOrderId  String   @unique
+
+  amount           Decimal  @db.Decimal(10,2)
+
+  checkoutData     Json
+
+  status           PaymentSessionStatus @default(CREATED)
+
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 }

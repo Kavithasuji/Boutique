@@ -10,9 +10,6 @@ import {
   MdLogout,
 } from "react-icons/md";
 import { FaBoxOpen } from "react-icons/fa";
-
-// Import your logo
-
 import logo from "../../assets/logo/cupi.webp";
 const Sidebar = () => {
   const navigate = useNavigate();
@@ -51,21 +48,21 @@ const Sidebar = () => {
       icon: <MdShoppingBag size={22} />,
       path: "/admin/orders",
     },
-    {
-      name: "Customers",
-      icon: <MdPeople size={22} />,
-      path: "/admin/customers",
-    },
-    {
-      name: "Reports",
-      icon: <MdAssessment size={22} />,
-      path: "/admin/reports",
-    },
-    {
-      name: "Settings",
-      icon: <MdSettings size={22} />,
-      path: "/admin/settings",
-    },
+    // {
+    //   name: "Customers",
+    //   icon: <MdPeople size={22} />,
+    //   path: "/admin/customers",
+    // },
+    // {
+    //   name: "Reports",
+    //   icon: <MdAssessment size={22} />,
+    //   path: "/admin/reports",
+    // },
+    // {
+    //   name: "Settings",
+    //   icon: <MdSettings size={22} />,
+    //   path: "/admin/settings",
+    // },
   ];
 
   return (
@@ -132,9 +129,9 @@ const Sidebar = () => {
       <div className="border-t border-gray-100 p-5">
         <div className="rounded-2xl bg-gray-50 border border-gray-200 p-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-[#D72638] flex items-center justify-center text-white text-lg font-bold">
+            {/* <div className="w-12 h-12 rounded-full bg-[#D72638] flex items-center justify-center text-white text-lg font-bold">
               {adminName.charAt(0)}
-            </div>
+            </div> */}
 
             <div className="flex-1">
               <h4 className="font-semibold text-gray-900">

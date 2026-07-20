@@ -1,134 +1,272 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../contexts/AuthContext';
+
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import {
+  FaLock,
+  FaEye,
+  FaEyeSlash,
+} from "react-icons/fa";
+import { useAuth } from "../contexts/AuthContext";
+import logo from "../assets/logo/cupi.webp";
 
 const CustomerLogin = () => {
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-    rememberMe: false,
-  });
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const [showPassword, setShowPassword] = useState(false);
+
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    rememberMe: false,
+  });
+
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const { name, value, type, checked } = e.target;
+
     setFormData({
       ...formData,
-      [name]: type === 'checkbox' ? checked : value,
+      [name]:
+        type === "checkbox" ? checked : value,
     });
-    setError('');
+
+    setError("");
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (
+    e: React.FormEvent
+  ) => {
     e.preventDefault();
-    setError('');
+
+    setError("");
     setLoading(true);
 
     try {
-      await login(formData.email, formData.password, formData.rememberMe);
-      navigate('/');
+      await login(
+        formData.email,
+        formData.password,
+        formData.rememberMe
+      );
+
+      navigate("/");
     } catch (err: any) {
-      setError(err.response?.data?.message || 'Login failed. Please try again.');
+      setError(
+        err.response?.data?.message ||
+          "Login failed. Please try again."
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-50 to-gray-100 px-4">
-      <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
-        <h1 className="text-3xl font-bold text-secondary text-center mb-6">
-          Sign in to your account
-        </h1>
-        <p className="text-center text-gray-600 mb-8">
-          Welcome back to Boutique
-        </p>
-        
-        {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6">
-            {error}
-          </div>
-        )}
+<div
+  className="relative flex min-h-screen items-center justify-center bg-cover bg-center bg-no-repeat py-8"
 
-        <form className="space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
+      style={{
+        backgroundImage:
+          "url('https://images.unsplash.com/photo-1496747611176-843222e1e57c?auto=format&fit=crop&w=1800&q=80')",
+      }}
+    >
+      {/* Overlay */}
+
+      <div className="absolute inset-0 bg-black/60"></div>
+
+      {/* Content */}
+
+<div className="relative z-10 flex w-full flex-col items-center px-6 pt-16 pb-4"> 
+         {/* <h1
+  className="mb-3 text-center text-4xl font-light uppercase tracking-[8px] text-white"
+          style={{
+            fontFamily: "'Montserrat', sans-serif",
+          }}
+        >
+          CUPIDANZA
+        </h1> */}
+
+<p className="mb-5 text-center text-sm uppercase tracking-[6px] text-red-300">      CUPIDANZA    Fashion Store
+        </p>
+
+        <div className="w-full max-w-xl rounded-sm bg-black/75 p-12 shadow-[0_25px_60px_rgba(0,0,0,0.55)] backdrop-blur-md">
+
+          {/* Logo */}
+
+          <div className="mb-8 flex justify-center">
+
+            <div className="flex h-28 w-28 items-center justify-center rounded-full bg-white shadow-2xl">
+
+              <img
+                src={logo}
+                alt="Cupidanza"
+                className="h-20 w-20 object-contain"
+              />
+
+            </div>
+
+          </div>
+
+          {/* Header */}
+
+          <div className="mb-8 text-center">
+
+            
+
+
+
+          </div>
+
+          {error && (
+            <div className="mb-6 rounded border border-red-500/40 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+              {error}
+            </div>
+          )}
+
+          <form
+            onSubmit={handleSubmit}
+            className="space-y-6"
+          >
+
+            {/* Email */}
+
             <div>
-              <label htmlFor="email" className="sr-only">
+
+              <label className="mb-2 block text-sm font-medium uppercase tracking-wider text-white">
                 Email Address
               </label>
+
               <input
-                id="email"
-                name="email"
                 type="email"
+                name="email"
+                placeholder="Enter your email"
                 required
-                className="appearance-none rounded-none rounded-t-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Email Address"
                 value={formData.email}
                 onChange={handleChange}
+                className="h-14 w-full rounded-sm bg-white px-5 text-gray-800 outline-none focus:ring-2 focus:ring-[#d72638]"
               />
+
             </div>
+
+            {/* Password */}
+
             <div>
-              <label htmlFor="password" className="sr-only">
+
+              <label className="mb-2 block text-sm font-medium uppercase tracking-wider text-white">
                 Password
               </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                className="appearance-none rounded-none rounded-b-md relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
-                value={formData.password}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="remember-me"
-                name="rememberMe"
-                type="checkbox"
-                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
-                checked={formData.rememberMe}
-                onChange={handleChange}
-              />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                Remember me
+              <div className="relative">
+                                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  placeholder="Enter your password"
+                  required
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="h-14 w-full rounded-sm bg-white px-5 pr-14 text-gray-800 outline-none transition focus:ring-2 focus:ring-[#d72638]"
+                />
+
+                <button
+                  type="button"
+                  onClick={() =>
+                    setShowPassword(!showPassword)
+                  }
+                  className="absolute right-5 top-1/2 -translate-y-1/2 text-xl text-gray-500 transition hover:text-[#d72638]"
+                >
+                  {showPassword ? (
+                    <FaEyeSlash />
+                  ) : (
+                    <FaEye />
+                  )}
+                </button>
+
+              </div>
+
+            </div>
+
+            <div className="flex items-center justify-between">
+
+              <label className="flex cursor-pointer items-center gap-2 text-sm text-gray-300">
+
+                <input
+                  id="remember-me"
+                  name="rememberMe"
+                  type="checkbox"
+                  checked={formData.rememberMe}
+                  onChange={handleChange}
+                  className="h-4 w-4 accent-[#d72638]"
+                />
+
+                Remember Me
+
               </label>
-            </div>
 
-            <div className="text-sm">
-              <Link to="/forgot-password" className="font-medium text-indigo-600 hover:text-indigo-500">
-                Forgot your password?
+              <Link
+                to="/forgot-password"
+                className="text-sm font-medium text-[#ff5b67] transition hover:text-white"
+              >
+                Forgot Password?
               </Link>
-            </div>
-          </div>
 
-          <div>
+            </div>
+
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="h-14 w-full rounded-sm bg-[#d72638] text-lg font-semibold uppercase tracking-[3px] text-white transition duration-300 hover:bg-[#b81f2f] disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {loading ? 'Signing in...' : 'Sign in'}
+              {loading ? "Signing In..." : "Sign In"}
             </button>
-          </div>
 
-          <div className="text-center">
-            <span className="text-sm text-gray-600">
-              Don't have an account?{' '}
-              <Link to="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
-                Sign up
-              </Link>
-            </span>
-          </div>
-        </form>
+            <div className="flex items-center">
+
+              <div className="h-px flex-1 bg-white/20"></div>
+
+              <span className="px-4 text-xs uppercase tracking-[5px] text-gray-400">
+                Cupidanza
+              </span>
+
+              <div className="h-px flex-1 bg-white/20"></div>
+
+            </div>
+
+            <div className="text-center">
+
+              <p className="text-sm leading-7 text-gray-300">
+                Experience premium fashion crafted
+                with elegance, timeless style and
+                luxury collections exclusively from
+                Cupidanza Fashion Store.
+              </p>
+
+            </div>
+
+            <div className="text-center">
+
+              <span className="text-sm text-gray-300">
+                Don't have an account?{" "}
+
+                <Link
+                  to="/register"
+                  className="font-semibold text-[#ff5b67] transition hover:text-white"
+                >
+                  Create Account
+                </Link>
+
+              </span>
+
+            </div>
+
+          </form>
+
+        </div>
+
       </div>
+
     </div>
   );
 };
